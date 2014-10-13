@@ -3,6 +3,7 @@
 %endif
 
 %global pkgname gmpy2
+%global is32 %(python -c 'import sys; print "1" if sys.maxint == 2147483647 else "0"')
 
 Name:           python-%{pkgname}
 Version:        2.0.4
@@ -15,6 +16,9 @@ Summary:        Python 2 interface to GMP, MPFR, and MPC
 License:        LGPLv3+ and Python
 URL:            https://pypi.python.org/pypi/gmpy2
 Source0:        https://pypi.python.org/packages/source/g/%{pkgname}/%{pkgname}-%{version}.zip
+# Fix the tests on 32-bit python2 systems.
+# https://code.google.com/p/gmpy/issues/detail?id=91
+Patch0:         %{name}-32bit.patch
 
 BuildRequires:  gmp-devel
 BuildRequires:  libmpc-devel
@@ -70,6 +74,10 @@ popd
 # Prepare for a python3 build
 cp -a %{pkgname}-%{version} python3-%{pkgname}-%{version}
 sed -i 's/sphinx-build/&-3/' python3-%{pkgname}-%{version}/docs/Makefile
+%endif
+
+%if 0%{?is32}
+%patch0
 %endif
 
 %build
