@@ -5,8 +5,8 @@
 %global pkgname gmpy2
 
 Name:           python-%{pkgname}
-Version:        2.0.3
-Release:        2%{?dist}
+Version:        2.0.4
+Release:        1%{?dist}
 Summary:        Python 2 interface to GMP, MPFR, and MPC
 
 # All source files are LGPLv3+ except:
@@ -135,6 +135,9 @@ popd
 %endif
 
 %changelog
+* Mon Oct 13 2014 Jerry James <loganjerry@gmail.com> - 2.0.4-1
+- New upstream release
+
 * Fri Sep 12 2014 Jerry James <loganjerry@gmail.com> - 2.0.3-2
 - BR python2-devel instead of python-devel
 - Provide bundled(jquery)
