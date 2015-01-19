@@ -1,12 +1,11 @@
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 8
+%if 0%{?fedora} || 0%{?rhel} >= 8
 %global with_py3 1
 %endif
 
 %global pkgname gmpy2
-%global is32 %(python -c 'import sys; print "1" if sys.maxint == 2147483647 else "0"')
 
 Name:           python-%{pkgname}
-Version:        2.0.4
+Version:        2.0.5
 Release:        1%{?dist}
 Summary:        Python 2 interface to GMP, MPFR, and MPC
 
@@ -16,9 +15,6 @@ Summary:        Python 2 interface to GMP, MPFR, and MPC
 License:        LGPLv3+ and Python
 URL:            https://pypi.python.org/pypi/gmpy2
 Source0:        https://pypi.python.org/packages/source/g/%{pkgname}/%{pkgname}-%{version}.zip
-# Fix the tests on 32-bit python2 systems.
-# https://code.google.com/p/gmpy/issues/detail?id=91
-Patch0:         %{name}-32bit.patch
 
 BuildRequires:  gmp-devel
 BuildRequires:  libmpc-devel
@@ -74,10 +70,6 @@ popd
 # Prepare for a python3 build
 cp -a %{pkgname}-%{version} python3-%{pkgname}-%{version}
 sed -i 's/sphinx-build/&-3/' python3-%{pkgname}-%{version}/docs/Makefile
-%endif
-
-%if 0%{?is32}
-%patch0
 %endif
 
 %build
@@ -143,6 +135,10 @@ popd
 %endif
 
 %changelog
+* Mon Jan 19 2015 Jerry James <loganjerry@gmail.com> - 2.0.5-1
+- New upstream release
+- Drop patch for 32-bit systems, fixed upstream
+
 * Mon Oct 13 2014 Jerry James <loganjerry@gmail.com> - 2.0.4-1
 - New upstream release
 
