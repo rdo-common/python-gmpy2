@@ -5,8 +5,8 @@
 %global pkgname gmpy2
 
 Name:           python-%{pkgname}
-Version:        2.0.5
-Release:        2%{?dist}
+Version:        2.0.6
+Release:        1%{?dist}
 Summary:        Python 2 interface to GMP, MPFR, and MPC
 
 # All source files are LGPLv3+ except:
@@ -135,6 +135,9 @@ popd
 %endif
 
 %changelog
+* Mon Jul  6 2015 Jerry James <loganjerry@gmail.com> - 2.0.6-1
+- New upstream release
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
