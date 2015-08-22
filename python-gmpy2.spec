@@ -5,7 +5,7 @@
 %global pkgname gmpy2
 
 Name:           python-%{pkgname}
-Version:        2.0.6
+Version:        2.0.7
 Release:        1%{?dist}
 Summary:        Python 2 interface to GMP, MPFR, and MPC
 
@@ -135,6 +135,9 @@ popd
 %endif
 
 %changelog
+* Sat Aug 22 2015 Jerry James <loganjerry@gmail.com> - 2.0.7-1
+- New upstream release
+
 * Mon Jul  6 2015 Jerry James <loganjerry@gmail.com> - 2.0.6-1
 - New upstream release
 
