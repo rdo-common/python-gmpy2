@@ -6,7 +6,7 @@
 
 Name:           python-%{pkgname}
 Version:        2.0.7
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Python 2 interface to GMP, MPFR, and MPC
 
 # All source files are LGPLv3+ except:
@@ -135,6 +135,9 @@ popd
 %endif
 
 %changelog
+* Tue Nov 10 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Changes/python3.5
+
 * Sat Aug 22 2015 Jerry James <loganjerry@gmail.com> - 2.0.7-1
 - New upstream release
 
