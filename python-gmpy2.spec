@@ -7,7 +7,7 @@
 Name:           python-%{srcname}
 Version:        2.0.7
 Release:        2%{?dist}
-Summary:        Python 2 interface to GMP, MPFR, and MPC
+Summary:        Python interface to GMP, MPFR, and MPC
 
 # All source files are LGPLv3+ except:
 # - src/py3intcompat.c is Python
@@ -27,9 +27,6 @@ BuildRequires:  python3-devel
 BuildRequires:  python3-sphinx
 %endif
 
-Provides:       bundled(jquery)
-%{?python_provide:%python_provide python2-%{srcname}}
-
 %global common_desc \
 This package contains a C-coded Python extension module that supports \
 multiple-precision arithmetic.  It is the successor to the original \
@@ -41,6 +38,15 @@ naming conventions to be more consistent and support the additional \
 functionality.
 
 %description
+%{common_desc}
+
+%package -n python2-%{srcname}
+Summary:        Python 2 interface to GMP, MPFR, and MPC
+
+Provides:       bundled(jquery)
+%{?python_provide:%python_provide python2-%{srcname}}
+
+%description -n python2-%{srcname}
 %{common_desc}
 
 %if 0%{?with_py3}
@@ -103,14 +109,14 @@ popd
 %install
 # Python 2 install
 pushd %{srcname}-%{version}
-%{py2_install}
+%py2_install
 chmod 0755 %{buildroot}%{python2_sitearch}/*.so
 popd
  
 %if 0%{?with_py3}
 # Python 3 install
 pushd python3-%{srcname}-%{version}
-%{py3_install}
+%py3_install
 chmod 0755 %{buildroot}%{python3_sitearch}/*.so
 popd
 %endif
@@ -128,7 +134,7 @@ PYTHONPATH=%{buildroot}%{python3_sitearch} %{__python3} test/runtests.py
 popd
 %endif
 
-%files
+%files -n python2-%{srcname}
 %license %{srcname}-%{version}/COPYING %{srcname}-%{version}/COPYING.LESSER
 %doc %{srcname}-%{version}/docs/_build/html/*
 %{python2_sitearch}/%{srcname}*
@@ -141,6 +147,9 @@ popd
 %endif
 
 %changelog
+* Mon Feb  1 2016 Jerry James <loganjerry@gmail.com> - 2.0.7-2
+- Comply with latest python packaging guidelines
+
 * Tue Nov 10 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.7-2
 - Rebuilt for https://fedoraproject.org/wiki/Changes/python3.5
 
