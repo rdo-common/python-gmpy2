@@ -2,9 +2,9 @@
 %global with_py3 1
 %endif
 
-%global pkgname gmpy2
+%global srcname gmpy2
 
-Name:           python-%{pkgname}
+Name:           python-%{srcname}
 Version:        2.0.7
 Release:        2%{?dist}
 Summary:        Python 2 interface to GMP, MPFR, and MPC
@@ -14,7 +14,7 @@ Summary:        Python 2 interface to GMP, MPFR, and MPC
 # - src/mpz_pylong.c is LGPLv2+
 License:        LGPLv3+ and Python
 URL:            https://pypi.python.org/pypi/gmpy2
-Source0:        https://pypi.python.org/packages/source/g/%{pkgname}/%{pkgname}-%{version}.zip
+Source0:        https://pypi.python.org/packages/source/g/%{srcname}/%{srcname}-%{version}.zip
 
 BuildRequires:  gmp-devel
 BuildRequires:  libmpc-devel
@@ -28,6 +28,7 @@ BuildRequires:  python3-sphinx
 %endif
 
 Provides:       bundled(jquery)
+%{?python_provide:%python_provide python2-%{srcname}}
 
 %global common_desc \
 This package contains a C-coded Python extension module that supports \
@@ -43,11 +44,13 @@ functionality.
 %{common_desc}
 
 %if 0%{?with_py3}
-%package -n python3-%{pkgname}
+%package -n python3-%{srcname}
 Summary:        Python 3 interface to GMP, MPFR, and MPC
-Provides:       bundled(jquery)
 
-%description -n python3-%{pkgname}
+Provides:       bundled(jquery)
+%{?python_provide:%python_provide python3-%{srcname}}
+
+%description -n python3-%{srcname}
 %{common_desc}
 %endif
 
@@ -55,7 +58,7 @@ Provides:       bundled(jquery)
 %setup -q -c
 
 # Fix file encodings.  First the easy one.
-pushd %{pkgname}-%{version}
+pushd %{srcname}-%{version}
 iconv -f ISO8859-1 -t UTF-8 src/gmpy2.c > src/gmpy2.c.utf8
 touch -r src/gmpy2.c src/gmpy2.c.utf8
 mv -f src/gmpy2.c.utf8 src/gmpy2.c
@@ -66,72 +69,75 @@ touch -r src/mpz_pylong.c.orig src/mpz_pylong.c
 rm src/mpz_pylong.c.orig
 popd
 
+%if 0%{?fedora} >= 24
+# Update the sphinx theme name
+sed -i 's/default/alabaster/' %{srcname}-%{version}/docs/conf.py
+%endif
+
 %if 0%{?with_py3}
 # Prepare for a python3 build
-cp -a %{pkgname}-%{version} python3-%{pkgname}-%{version}
-sed -i 's/sphinx-build/&-3/' python3-%{pkgname}-%{version}/docs/Makefile
+cp -a %{srcname}-%{version} python3-%{srcname}-%{version}
+sed -i 's/sphinx-build/&-3/' python3-%{srcname}-%{version}/docs/Makefile
 %endif
 
 %build
 # Adapt to 64-bit systems
-if [ "%{_libdir}" = "%{_prefix}/lib64" ]; then
-  ARGS=--lib64
-else
-  ARGS=
-fi
+%if "%{_libdir}" == "%{_prefix}/lib64"
+%global py_setup_args "--lib64"
+%endif
 
 # Python 2 build
-pushd %{pkgname}-%{version}
-%{__python2} setup.py $ARGS build
+pushd %{srcname}-%{version}
+%py2_build
 make -C docs html
 popd
 
 %if 0%{?with_py3}
 # Python 3 build
-pushd python3-%{pkgname}-%{version}
-%{__python3} setup.py $ARGS build
+pushd python3-%{srcname}-%{version}
+%py3_build
 make -C docs html
 popd
 %endif
 
 %install
 # Python 2 install
-pushd %{pkgname}-%{version}
-%{__python2} setup.py $ARGS install -O1 --skip-build --root %{buildroot}
+pushd %{srcname}-%{version}
+%{py2_install}
 chmod 0755 %{buildroot}%{python2_sitearch}/*.so
 popd
  
 %if 0%{?with_py3}
 # Python 3 install
-pushd python3-%{pkgname}-%{version}
-%{__python3} setup.py $ARGS install -O1 --skip-build --root %{buildroot}
+pushd python3-%{srcname}-%{version}
+%{py3_install}
 chmod 0755 %{buildroot}%{python3_sitearch}/*.so
 popd
 %endif
 
 %check
 # Python 2 tests
-pushd %{pkgname}-%{version}
+pushd %{srcname}-%{version}
 PYTHONPATH=%{buildroot}%{python2_sitearch} %{__python2} test/runtests.py
 popd
 
 %if 0%{?with_py3}
 # Python 3 tests
-pushd python3-%{pkgname}-%{version}
+pushd python3-%{srcname}-%{version}
 PYTHONPATH=%{buildroot}%{python3_sitearch} %{__python3} test/runtests.py
 popd
 %endif
 
 %files
-%license %{pkgname}-%{version}/COPYING %{pkgname}-%{version}/COPYING.LESSER
-%doc %{pkgname}-%{version}/docs/_build/html/*
-%{python2_sitearch}/%{pkgname}*
+%license %{srcname}-%{version}/COPYING %{srcname}-%{version}/COPYING.LESSER
+%doc %{srcname}-%{version}/docs/_build/html/*
+%{python2_sitearch}/%{srcname}*
 
 %if 0%{?with_py3}
-%files -n python3-%{pkgname}
-%license %{pkgname}-%{version}/COPYING %{pkgname}-%{version}/COPYING.LESSER
-%doc python3-%{pkgname}-%{version}/docs/_build/html/*
-%{python3_sitearch}/%{pkgname}*
+%files -n python3-%{srcname}
+%license %{srcname}-%{version}/COPYING %{srcname}-%{version}/COPYING.LESSER
+%doc python3-%{srcname}-%{version}/docs/_build/html/*
+%{python3_sitearch}/%{srcname}*
 %endif
 
 %changelog
