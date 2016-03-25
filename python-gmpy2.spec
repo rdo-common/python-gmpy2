@@ -6,7 +6,7 @@
 
 Name:           python-%{srcname}
 Version:        2.0.7
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Python interface to GMP, MPFR, and MPC
 
 # All source files are LGPLv3+ except:
@@ -15,12 +15,14 @@ Summary:        Python interface to GMP, MPFR, and MPC
 License:        LGPLv3+ and Python
 URL:            https://pypi.python.org/pypi/gmpy2
 Source0:        https://pypi.python.org/packages/source/g/%{srcname}/%{srcname}-%{version}.zip
+# Do not segfault on error inside Pympz_rshift or Pympz_lshift
+Patch0:         %{name}-decref.patch
 
 BuildRequires:  gmp-devel
 BuildRequires:  libmpc-devel
 BuildRequires:  mpfr-devel
 BuildRequires:  python2-devel
-BuildRequires:  python-sphinx
+BuildRequires:  python2-sphinx
 
 %if 0%{?with_py3}
 BuildRequires:  python3-devel
@@ -63,8 +65,10 @@ Provides:       bundled(jquery)
 %prep
 %setup -q -c
 
-# Fix file encodings.  First the easy one.
 pushd %{srcname}-%{version}
+%patch0
+
+# Fix file encodings.  First the easy one.
 iconv -f ISO8859-1 -t UTF-8 src/gmpy2.c > src/gmpy2.c.utf8
 touch -r src/gmpy2.c src/gmpy2.c.utf8
 mv -f src/gmpy2.c.utf8 src/gmpy2.c
@@ -147,6 +151,9 @@ popd
 %endif
 
 %changelog
+* Fri Mar 25 2016 Jerry James <loganjerry@gmail.com> - 2.0.7-4
+- Add -decref patch
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 2.0.7-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 

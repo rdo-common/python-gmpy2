@@ -1,0 +1,24 @@
+--- src/gmpy_mpz.c.orig	2015-06-24 22:55:34.000000000 -0600
++++ src/gmpy_mpz.c	2016-03-25 12:21:59.862494765 -0600
+@@ -1127,8 +1127,8 @@ Pympz_rshift(PyObject *self, PyObject *o
+ 
+   err:
+     Py_DECREF((PyObject*)result);
+-    Py_DECREF((PyObject*)tempa);
+-    Py_DECREF((PyObject*)tempb);
++    Py_XDECREF((PyObject*)tempa);
++    Py_XDECREF((PyObject*)tempb);
+     return NULL;
+ }
+ 
+@@ -1185,8 +1185,8 @@ Pympz_lshift(PyObject *self, PyObject *o
+ 
+   err:
+     Py_DECREF((PyObject*)result);
+-    Py_DECREF((PyObject*)tempa);
+-    Py_DECREF((PyObject*)tempb);
++    Py_XDECREF((PyObject*)tempa);
++    Py_XDECREF((PyObject*)tempb);
+     return NULL;
+ }
+ 
