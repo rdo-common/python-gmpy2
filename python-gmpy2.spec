@@ -5,8 +5,8 @@
 %global srcname gmpy2
 
 Name:           python-%{srcname}
-Version:        2.0.7
-Release:        4%{?dist}
+Version:        2.0.8
+Release:        1%{?dist}
 Summary:        Python interface to GMP, MPFR, and MPC
 
 # All source files are LGPLv3+ except:
@@ -14,10 +14,9 @@ Summary:        Python interface to GMP, MPFR, and MPC
 # - src/mpz_pylong.c is LGPLv2+
 License:        LGPLv3+ and Python
 URL:            https://pypi.python.org/pypi/gmpy2
-Source0:        https://pypi.python.org/packages/source/g/%{srcname}/%{srcname}-%{version}.zip
-# Do not segfault on error inside Pympz_rshift or Pympz_lshift
-Patch0:         %{name}-decref.patch
+Source0:        https://files.pythonhosted.org/packages/source/g/%{srcname}/%{srcname}-%{version}.zip
 
+BuildRequires:  gcc
 BuildRequires:  gmp-devel
 BuildRequires:  libmpc-devel
 BuildRequires:  mpfr-devel
@@ -66,7 +65,6 @@ Provides:       bundled(jquery)
 %setup -q -c
 
 pushd %{srcname}-%{version}
-%patch0
 
 # Fix file encodings.  First the easy one.
 iconv -f ISO8859-1 -t UTF-8 src/gmpy2.c > src/gmpy2.c.utf8
@@ -151,6 +149,10 @@ popd
 %endif
 
 %changelog
+* Tue Jun 28 2016 Jerry James <loganjerry@gmail.com> - 2.0.8-1
+- New upstream release
+- Drop upstreamed -decref patch
+
 * Fri Mar 25 2016 Jerry James <loganjerry@gmail.com> - 2.0.7-4
 - Add -decref patch
 
