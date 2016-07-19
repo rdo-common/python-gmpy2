@@ -6,7 +6,7 @@
 
 Name:           python-%{srcname}
 Version:        2.0.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Python interface to GMP, MPFR, and MPC
 
 # All source files are LGPLv3+ except:
@@ -149,6 +149,9 @@ popd
 %endif
 
 %changelog
+* Tue Jul 19 2016 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.8-2
+- https://fedoraproject.org/wiki/Changes/Automatic_Provides_for_Python_RPM_Packages
+
 * Tue Jun 28 2016 Jerry James <loganjerry@gmail.com> - 2.0.8-1
 - New upstream release
 - Drop upstreamed -decref patch
