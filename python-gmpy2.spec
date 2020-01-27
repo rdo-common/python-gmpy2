@@ -1,3 +1,4 @@
+%{?python_enable_dependency_generator}
 %if 0%{?fedora} || 0%{?rhel} >= 8
 %global with_py3 1
 %endif
@@ -20,8 +21,6 @@ BuildRequires:  gcc
 BuildRequires:  gmp-devel
 BuildRequires:  libmpc-devel
 BuildRequires:  mpfr-devel
-BuildRequires:  python2-devel
-BuildRequires:  python2-sphinx
 
 %if 0%{?with_py3}
 BuildRequires:  python3-devel
@@ -39,15 +38,6 @@ naming conventions to be more consistent and support the additional \
 functionality.
 
 %description
-%{common_desc}
-
-%package -n python2-%{srcname}
-Summary:        Python 2 interface to GMP, MPFR, and MPC
-
-Provides:       bundled(jquery)
-%{?python_provide:%python_provide python2-%{srcname}}
-
-%description -n python2-%{srcname}
 %{common_desc}
 
 %if 0%{?with_py3}
@@ -94,27 +84,16 @@ sed -i 's/sphinx-build/&-3/' python3-%{srcname}-%{version}/docs/Makefile
 %global py_setup_args "--lib64"
 %endif
 
-# Python 2 build
-pushd %{srcname}-%{version}
-%py2_build
-make -C docs html
-popd
-
 %if 0%{?with_py3}
 # Python 3 build
 pushd python3-%{srcname}-%{version}
 %py3_build
-make -C docs html
+#make -C docs html
 popd
 %endif
 
 %install
 # Python 2 install
-pushd %{srcname}-%{version}
-%py2_install
-chmod 0755 %{buildroot}%{python2_sitearch}/*.so
-popd
- 
 %if 0%{?with_py3}
 # Python 3 install
 pushd python3-%{srcname}-%{version}
@@ -125,10 +104,6 @@ popd
 
 %check
 # Python 2 tests
-pushd %{srcname}-%{version}
-PYTHONPATH=%{buildroot}%{python2_sitearch} %{__python2} test/runtests.py
-popd
-
 %if 0%{?with_py3}
 # Python 3 tests
 pushd python3-%{srcname}-%{version}
@@ -136,15 +111,9 @@ PYTHONPATH=%{buildroot}%{python3_sitearch} %{__python3} test/runtests.py
 popd
 %endif
 
-%files -n python2-%{srcname}
-%license %{srcname}-%{version}/COPYING %{srcname}-%{version}/COPYING.LESSER
-%doc %{srcname}-%{version}/docs/_build/html/*
-%{python2_sitearch}/%{srcname}*
-
 %if 0%{?with_py3}
 %files -n python3-%{srcname}
 %license %{srcname}-%{version}/COPYING %{srcname}-%{version}/COPYING.LESSER
-%doc python3-%{srcname}-%{version}/docs/_build/html/*
 %{python3_sitearch}/%{srcname}*
 %endif
 
